@@ -1,0 +1,25 @@
+form {
+    display: flex;
+
+    .submit-btn {
+        margin: auto 0;
+        margin-left: 5px;
+    }
+}
+
+.contac-info{
+    display: flex;
+    flex-direction: column;
+
+    input:not(:last-child) {
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 200px;
+    }
+}
+
+.row {
+    display: flex;
+}
