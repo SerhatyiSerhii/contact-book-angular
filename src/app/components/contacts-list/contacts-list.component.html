@@ -1,0 +1,19 @@
+<ul>
+    <li *ngFor="let contact of list" [ngClass]="{'is-friend': contact.bestFriend}">
+        <div class="contact-row">
+            <div>
+                Name: {{ contact.name }};
+            </div>
+            <div>
+                Surname: {{ contact.surname }};
+            </div>
+            <div *ngIf="contact.phone != ''">
+                Phone number: {{ contact.phone }};
+            </div>
+            <div *ngIf="contact.email != ''">
+                Email address: {{ contact.email }};
+            </div>
+            <button (click)="toggleFriend(contact)" [title]="'Mark as a best friend'"></button>
+        </div>
+    </li>
+</ul>

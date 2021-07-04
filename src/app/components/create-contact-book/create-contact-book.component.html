@@ -1,0 +1,87 @@
+<section>
+    <div *ngIf="submitted">
+        <form (submit)="onSubmit()" [formGroup]="contactForm">
+            <div class="contac-info">
+                <div>
+                    <label for="name">Name</label>
+                    <input id="name" type="text" placeholder="Type contact's name..." name="name"
+                        formControlName="name">
+
+                    <div *ngIf="name.invalid && (name.touched || name.dirty)" class="alert">
+                        <div *ngIf="name.errors?.required">
+                            Name is required
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="surname">Surname</label>
+                    <input id="surname" type="text" placeholder="Type contact's surname..." name="surname"
+                        formControlName="surname">
+
+                    <div *ngIf="surname.invalid && (surname.touched || surname.dirty)" class="alert">
+                        <div *ngIf="surname.errors?.required">
+                            Surname is required
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="phone">Phone number</label>
+                    <input id="phone" type="text" placeholder="Type contact's phone number..." name="phone"
+                        formControlName="phone">
+
+                    <div *ngIf="phone.invalid && (phone.touched || phone.dirty)" class="alert">
+                        <div *ngIf="phone.errors?.pattern">
+                            Phone is invalid
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label for="email">Email address</label>
+                    <input id="email" type="email" placeholder="Type contact's email address..." name="email" email
+                        formControlName="email">
+
+                    <div *ngIf="email.invalid && (email.touched || email.dirty)" class="alert">
+                        <div *ngIf="email.errors?.email">
+                            Email is invalid
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!email.value && !phone.value" class="alert">
+                    Phone number or email address is required
+                </div>
+            </div>
+
+            <div class="submit-btn">
+                <input type="submit" value="Add a contact" [disabled]="checkEmptyString()" [title]="addContactCheck()">
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="!submitted">
+        <div class="row">
+            <div>Contact's name will be:&nbsp;</div>
+            <div>{{name.value}}</div>
+        </div>
+        <div class="row">
+            <div>Contact's surname will be:&nbsp;</div>
+            <div>{{surname.value}}</div>
+        </div>
+        <div class="row">
+            <div>Contact's phone will be:&nbsp;</div>
+            <div>{{phone.value}}</div>
+        </div>
+        <div class="row">
+            <div>Contact's Email will be:&nbsp;</div>
+            <div>{{email.value}}</div>
+        </div>
+        <div class="buttons">
+            <div>
+                <button (click)="submitted=!submitted">Edit</button>
+            </div>
+            <div>
+                <button (click)="addContact()">Add Contact</button>
+            </div>
+        </div>
+    </div>
+</section>

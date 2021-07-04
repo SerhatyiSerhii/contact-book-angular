@@ -1,0 +1,43 @@
+ul {
+   list-style: none;
+   padding-left: 10px;
+   display: inline-flex;
+   flex-direction: column;
+}
+
+li {
+   position: relative;
+   padding-left: 5px;
+
+}
+
+.is-friend:before {
+   display: inline-block;
+   content: " ";
+   background-image: url("../../../assets/icons/freind-icon.svg");
+   background-size: contain;
+   width: 10px;
+   height: 10px;
+   position: absolute;
+   top: 4px;
+   left: -5px;
+}
+
+button {
+   background: url("../../../assets/icons/friend.svg");
+   width: 20px;
+   height: 20px;
+   background-size: cover;
+}
+
+.contact-row {
+   display: inline-flex;
+
+   div:not(:first-child) {
+      margin-left: 5px;
+   }
+
+   button {
+      margin-left: 5px;
+   }
+}
