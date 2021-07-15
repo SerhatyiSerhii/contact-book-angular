@@ -1,6 +1,7 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
+import { ContactsService } from "src/app/services/contacts.service";
 
 @Component({
     selector: 'create-contact',
@@ -15,8 +16,7 @@ export class CreateContactComponent implements OnInit {
     @ViewChild('respect') public respect: ElementRef;
     @ViewChild('audio') public audio: ElementRef;
 
-    @Output()
-    public create: EventEmitter<ContactItem> = new EventEmitter<ContactItem>();
+    constructor(private contacsService: ContactsService) {}
 
     public getFormControl(formControl: string): AbstractControl {
         return this.contactForm.get(formControl)!;
@@ -45,7 +45,7 @@ export class CreateContactComponent implements OnInit {
 
         const newContact = new ContactItem(this.getFormControl('name').value?.trim(), this.getFormControl('surname').value?.trim(), this.getFormControl('phone').value?.trim(), this.getFormControl('email').value?.trim());
 
-        this.create.emit(newContact);
+        this.contacsService.addContact(newContact);
 
         this.contactForm.reset();
         this.getFormControl('name').setValue('');

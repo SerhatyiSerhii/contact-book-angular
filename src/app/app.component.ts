@@ -7,9 +7,9 @@ import { ContactItem } from './models/contac-item';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public contacList: ContactItem[] = [];
+  // public contacList: ContactItem[] = [];
 
-  public addContact(contact: ContactItem): void {
-    this.contacList.push(contact);
-  }
+  // public addContact(contact: ContactItem): void {
+  //   this.contacList.push(contact);
+  // }
 }

@@ -1,6 +1,7 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
+import { ContactsService } from "src/app/services/contacts.service";
 
 @Component({
     selector: 'contacts-list',
@@ -11,7 +12,9 @@ import { ContactItem } from "src/app/models/contac-item";
 export class ContactsListComponent implements OnInit {
 
     @ViewChild('editorPane') public editorPane: ElementRef;
-    @Input() public list: ContactItem[];
+    public get list(): ContactItem[] {
+        return this.contactsService.getContacts();
+    };
     public contactName: HTMLInputElement;
     public contactPhone: HTMLInputElement;
     public contactEmail: HTMLInputElement;
@@ -22,7 +25,11 @@ export class ContactsListComponent implements OnInit {
     public checkerForm: FormGroup;
     public position: HTMLElement = document.documentElement;
 
-    ngOnInit(): void {
+    constructor(private contactsService: ContactsService) {}
+
+
+
+    public ngOnInit(): void {
         this.checkerForm = new FormGroup({
             name: new FormControl('', [Validators.required]),
             phone: new FormControl('', [Validators.pattern(this.pattern)]),
