@@ -1,19 +1,164 @@
-<ul>
-    <li *ngFor="let contact of list" [ngClass]="{'is-friend': contact.bestFriend}">
-        <div class="contact-row">
-            <div>
-                Name: {{ contact.name }};
+<section *ngIf="list.length">
+    <div class="container">
+
+        <div class="glowing-container">
+            <div class="glowing">
+                <span style="--i:1;"></span>
+                <span style="--i:2;"></span>
+                <span style="--i:3;"></span>
             </div>
-            <div>
-                Surname: {{ contact.surname }};
+            <div class="glowing">
+                <span style="--i:1;"></span>
+                <span style="--i:2;"></span>
+                <span style="--i:3;"></span>
             </div>
-            <div *ngIf="contact.phone != ''">
-                Phone number: {{ contact.phone }};
+            <div class="glowing">
+                <span style="--i:1;"></span>
+                <span style="--i:2;"></span>
+                <span style="--i:3;"></span>
             </div>
-            <div *ngIf="contact.email != ''">
-                Email address: {{ contact.email }};
+            <div class="glowing">
+                <span style="--i:1;"></span>
+                <span style="--i:2;"></span>
+                <span style="--i:3;"></span>
             </div>
-            <button (click)="toggleFriend(contact)" [title]="'Mark as a best friend'"></button>
         </div>
-    </li>
-</ul>
+
+        <ul #element>
+            <li *ngFor="let contact of list; let i = index" [ngClass]="{'is-friend': contact.bestFriend}" #contactItem>
+                <div class="contact">
+                    <svg width="300" height="200" viewBox="0 0 300 200">
+                        <pattern id="image" x="0%" y="0%" height="100%" width="100%" viewBox="0 0 250 250">
+                            <image xlink:href="../../../assets/images/contact-image.png" width="325px" height="325px"
+                                x="-35" y="-35" />
+                        </pattern>
+
+                        <defs>
+                            <radialGradient id="rectFill">
+                                <stop offset="0%" stop-color="#33b0ff" />
+                                <stop offset="100%" stop-color="#002894" />
+                            </radialGradient>
+                        </defs>
+
+                        <rect x="0" y="0" width="300" height="200" fill="url(#rectFill)" />
+                        <circle cx="50%" cy="50%" r="37" fill="rgba(98, 0, 255, 0.5)" stroke-width="3px"
+                            stroke="rgba(98, 0, 255, 1)" />
+                        <circle cx="50%" cy="50%" r="37" fill="url(#image)" stroke-width="3px"
+                            stroke="rgba(98, 0, 255, 1)" />
+
+                        <path id="curve" fill="transparent" d="M 10 70 Q 150 -20, 290 70" />
+                        <path id="curve2" fill="transparent" d="M 10 160 H 290" />
+                        <path id="curve3" fill="transparent" d="M 10 70 H 290" />
+                        <text>
+                            <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle" fill="white"
+                                class="name">
+                                {{ contact.name }} {{ contact.surname }}
+                            </textPath>
+                            <textPath xlink:href="#curve2" startOffset="50%" text-anchor="middle" fill="white">
+                                {{ contact.email }}
+                            </textPath>
+                            <textPath class="phone" xlink:href="#curve3" startOffset="50%" text-anchor="middle"
+                                fill="white">
+                                {{ contact.phone }}
+                            </textPath>
+                        </text>
+                    </svg>
+                    <div class="buttons-holder">
+                        <button (click)="correctContactData(contactItem)" class="button edit"></button>
+                        <button (click)="contactItem.remove(); deleteListItem(i)" class="button remove"></button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="editor-pane" #editorPane [formGroup]="checkerForm">
+        <div class="text">
+            <h2 style="--i:0.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:1.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:2.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:0.75"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:2.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:0.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:1.5"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:0.35"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:1.35"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:0.75"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+            <h2 style="--i:2.35"><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect
+                    CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span><span>CoRRect CoNTact</span>
+            </h2>
+        </div>
+        <div class="edit-container">
+            Correct contact
+
+            <div>
+                <label>
+                    Name & Surname:
+                    <input type="text" formControlName="name">
+                </label>
+
+                <div *ngIf="checkAbstractControlValidity(getFormControl('name'))" class="alert">
+                    <span>Invalid name</span>
+                </div>
+            </div>
+
+            <div>
+                <label>
+                    Phone:
+                    <input type="text" formControlName="phone">
+                </label>
+
+                <div *ngIf="checkAbstractControlValidity(getFormControl('phone'))" class="alert">
+                    <span>Invalid phone</span>
+                </div>
+            </div>
+
+            <div>
+                <label>
+                    Email:
+                    <input type="email" email formControlName='email'>
+                </label>
+
+                <div *ngIf="checkAbstractControlValidity(getFormControl('email'))" class="alert">
+                    <span>Invalid email</span>
+                </div>
+            </div>
+            <div class="editor-buttons">
+                <button (click)="calcelCorrectData()">Cancel</button>
+                <button (click)="updateContact()"
+                    [disabled]="checkerForm.invalid || checkFormValidity()">Update</button>
+            </div>
+        </div>
+    </div>
+</section>

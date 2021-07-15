@@ -7,8 +7,6 @@ import { ContactItem } from './models/contac-item';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'contact-book-angular';
-
   public contacList: ContactItem[] = [];
 
   public addContact(contact: ContactItem): void {

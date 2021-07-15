@@ -5,15 +5,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { ContactsListComponent } from './components/contacts-list/contacts-list.component';
-import { CreateContactBookComponent } from './components/create-contact-book/create-contact-book.component';
-import { CreateThreeJS } from './components/threeJS/threeJS.component';
+import { CreateContactComponent } from './components/create-contact/create-contact.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CreateContactBookComponent,
-    ContactsListComponent,
-    CreateThreeJS
+    CreateContactComponent,
+    ContactsListComponent
   ],
   imports: [
     BrowserModule,
