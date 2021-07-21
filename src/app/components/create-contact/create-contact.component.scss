@@ -1,222 +1,30 @@
-@import '../../styles/colors.scss';
-@import url('https://fonts.googleapis.com/css2?family=Tourney:wght@900&display=swap');
-
-section {
-    padding-bottom: 75px;
-}
-
-.section-form {
-    padding-top: 40px;
-
-    .central-position {
-        display: flex;
-        justify-content: center;
-        max-width: 350px;
-        margin: 0 auto;
-    }
-
-    .phone-frame {
-        border: 1px solid black;
-        padding: 2px;
-        border-radius: 35px;
-        position: relative;
-        background-color: rgba(255, 0, 0, 1);
-    }
-
-    .phone-button {
-        position: absolute;
-        width: 236px;
-        height: 35px;
-        border: 1px solid black;
-        background-color: rgba(255, 0, 0, 1);
-        border-radius: 5px;
-        z-index: -1;
-        right: -4px;
-        top: 85px;
-
-        &:before {
-            content: '';
-            display: block;
-            background-color: rgba(255, 0, 0, 1);;
-            border-radius: 5px;
-            width:  5px;
-            height: 15px;
-            border: 1px solid black;
-            position: relative;
-            top: -30px;
-            left: -1px;
-        }
-
-        &:after {
-            content: '';
-            display: block;
-            background-color: rgba(255, 0, 0, 1);;
-            border-radius: 5px;
-            width:  5px;
-            height: 35px;
-            border: 1px solid black;
-            position: relative;
-            top: 25px;
-            left: -1px;
-        }
-    }
-}
-
-form {
-    border: 1px solid black;
-    border-radius: 35px;
-    padding: 10px 10px 20px;
-    height: 380px;
-    box-sizing: border-box;
-    background-color: rgba(211, 211, 211, 1);
-
-    .top-controls {
-        display: flex;
-        justify-content: center;
-
-        .microphone {
-            width: 50px;
-            height: 4px;
-            margin: 10px 0 25px;
-            border-radius: 5px;
-            position: relative;
-            background: black;
-
-            &:before {
-                content: '';
-                width: 9px;
-                height: 9px;
-                border-radius: 50%;
-                display: block;
-                background: black;
-                position: relative;
-                right: 25px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-        }
-    }
-
-    .screen {
-        border: 2px solid black;
-        background: radial-gradient(#fdfbf4 70px, #cfc3a5);
-        border-radius: 5px;
-        width: 200px;
-        height: 255px;
-        text-align: center;
-        padding-top: 5px;
-        overflow-y: scroll;
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            width: 0px;
-        }
-    }
-
-    .screen-indicator {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        display: flex;
-        margin: 0 auto;
-        background: black;
-    }
-
-    .submit-btn {
-        display: flex;
-        justify-content: center;
-        margin-top: 9px;
-    }
-
-    .form-name {
-        font-size: 20px;
-        text-align: center;
-        text-transform: uppercase;
-        font-family: 'Tourney', cursive;
-        color: $screen-text-color;
-    }
-
-    button {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: rgba(175, 175, 175, 0.1);
-
-        &:disabled:first-child {
-            fill:rgb(133, 133, 133);
-        }
-
-        &:first-child {
-            fill: rgb(59, 59, 59);
-        }
-    }
-}
-
-.contac-info{
+.container {
+    background-color: #c2c2c2;
+    max-width: 1200px;
+    height: 800px;
     display: flex;
-    flex-direction: column;
-    max-width: 180px;
-    margin: 15px auto 0;
-
-    div:not(:last-child) {
-        margin-bottom: 5px;
-    }
-
-    input {
-        width: 180px;
-        box-sizing: border-box;
-        color: white;
-        background-color: rgb(150, 150, 150);
-        border-radius: 3px;
-        margin-top: 3px;
-
-        &::placeholder{
-            color: rgb(255, 255, 255);
-        }
-
-        &:focus {
-            outline-offset: 3px;
-            outline-color: $outline-color;
-            border-color: $border-color;
-            border-radius: 3px;
-            background-color: rgb(150, 150, 150);
-            color: rgb(255, 255, 255);
-
-            &.ng-invalid {
-                outline-color: $outline-color-alert;
-                border-color: $border-color-alert;
-            }
-        }
-
-        &.ng-touched.ng-invalid {
-            border-color: $border-color-alert
-        }
-    }
-}
-
-.row {
-    display: flex;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    text-align: start;
-    font-family: 'Tourney', cursive;
-    color: $screen-text-color
-}
-
-.alert {
-    max-width: 180px;
     margin: 0 auto;
-    background-color: $background-color-alert;
-    color: $border-color-alert;
+    border: 1px solid black;
+    box-sizing: border-box;
 }
 
-.buttons {
-    display: flex;
+.contacts-list {
+    background-color: blanchedalmond;
+    width: 35%;
+    border-right: 1px solid black;
+    overflow: hidden;
+}
 
-    div:not(:first-child) {
-        margin-left: 5px;
-    }
+.contact {
+    width: 65%;
+    background-color: khaki;
+}
+
+.list-container {
+    max-height: 750px;
+    overflow-y: auto;
+}
+
+.top-line {
+    height: 50px;
 }

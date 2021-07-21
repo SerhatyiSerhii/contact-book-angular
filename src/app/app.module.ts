@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { AddContactComponent } from './components/add-contact/add-contact.component';
+import { ContactDetailsComponent } from './components/contact-details.component/contact-details.component';
 import { ContactsListComponent } from './components/contacts-list/contacts-list.component';
 import { CreateContactComponent } from './components/create-contact/create-contact.component';
 
@@ -11,7 +13,9 @@ import { CreateContactComponent } from './components/create-contact/create-conta
   declarations: [
     AppComponent,
     CreateContactComponent,
-    ContactsListComponent
+    ContactsListComponent,
+    AddContactComponent,
+    ContactDetailsComponent
   ],
   imports: [
     BrowserModule,
