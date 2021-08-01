@@ -1,15 +1,32 @@
 <div class="contact-details">
-    <div class="details">
+    <div class="details" *ngIf="!contactsService.edit">
         <h3>
-            Name: {{contactDetails.name}} {{contactDetails.surname}}
+            Name: {{contactId!.name}} {{contactId!.surname}}
         </h3>
-        <h3 *ngIf="contactDetails.phone">
-            Phone: {{contactDetails.phone}}
+        <h3 *ngIf="contactId!.phone">
+            Phone: {{contactId!.phone}}
         </h3>
-        <h3 *ngIf="contactDetails.email">
-            Email: {{contactDetails.email}}
+        <h3 *ngIf="contactId!.email">
+            Email: {{contactId!.email}}
         </h3>
     </div>
+
+    <div class="update" *ngIf="contactsService.edit" [formGroup]="updateForm">
+
+        <label *ngFor="let item of contactFields">
+            New {{item[0].toUpperCase() + item.slice(1)}}:
+            <input type="text" formControlName="{{item}}"
+                [class.alert]="checkAbstractControlValidity(item)">
+        </label>
+
+        <div class="buttons update">
+            <button (click)="cancelUpdateContact()">Cancel</button>
+            <button [disabled]="updateForm.invalid || checkFormValidity()" (click)="updateContact()"
+                [title]="showBtnTitle()">Update</button>
+        </div>
+
+    </div>
+
     <div class="buttons">
         <button (click)="makeFavorite()">Favorite</button>
         <button (click)="editContact()">Edit</button>
@@ -17,26 +34,4 @@
         <button (click)="deleteContact()">Delete</button>
     </div>
 
-    <div class="update" *ngIf="contactDetails.edit" [formGroup]="updateForm">
-        <label>
-            New name:
-            <input type="text" formControlName="updateName" [class.alert]="checkAbstractControlValidity(getFormControl('updateName'))">
-        </label>
-        <label>
-            New surname:
-            <input type="text" formControlName="updateSurname" [class.alert]="checkAbstractControlValidity(getFormControl('updateSurname'))">
-        </label>
-        <label>
-            New phone:
-            <input type="text" formControlName="updatePhone" [class.alert]="checkAbstractControlValidity(getFormControl('updatePhone'))">
-        </label>
-        <label>
-            New email:
-            <input type="email" email formControlName="updateEmail" [class.alert]="checkAbstractControlValidity(getFormControl('updateEmail'))">
-        </label>
-        <div class="buttons">
-            <button (click)="cancelUpdateContact()">Cancel</button>
-            <button [disabled]="updateForm.invalid || checkFormValidity()" (click)="updateContact()" [title]="showBtnTitle()">Update</button>
-        </div>
-    </div>
 </div>

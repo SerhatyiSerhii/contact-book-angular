@@ -1,8 +1,8 @@
-import { Component, Input } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
+import { ContactFormService } from "src/app/models/contact-form";
 import { ContactsService } from "src/app/services/contacts.service";
-import { ShowContactService } from "src/app/services/show-contact.service";
 
 
 @Component({
@@ -11,96 +11,54 @@ import { ShowContactService } from "src/app/services/show-contact.service";
     styleUrls: ['./contact-details.component.scss']
 })
 
-export class ContactDetailsComponent {
+export class ContactDetailsComponent extends ContactFormService {
 
-    @Input() public contactDetails: ContactItem;
-    public pattern: string = '^(?=.*[0-9])[- +()0-9]+$';
-    public updateForm: FormGroup;
+    @Input() selectedContactId: number | undefined;
+    @Output() resetContact: EventEmitter<undefined> = new EventEmitter<undefined>();
 
-    constructor(private showContactService: ShowContactService, private contactsService: ContactsService) { }
+    constructor(public contactsService: ContactsService) {
+        super();
+    }
+
+    public get contactId(): ContactItem | undefined {
+        return this.contactsService.getContactById(this.selectedContactId!);
+    }
 
     public reset(): void {
-        this.showContactService.resetContact();
+        this.resetContact.emit(undefined);
     }
 
     public deleteContact(): void {
-        const contactsServiceArr = this.contactsService.getContacts();
-
-        const contact = this.showContactService.getContact();
-
-        this.contactsService.deleteContact(contactsServiceArr.indexOf(contact!));
+        this.contactsService.deleteContact(this.contactId!);
 
         this.reset();
     }
 
     public makeFavorite(): void {
-        const contact = this.showContactService.getContact();
-
-        if (contact!.favorite) {
-            contact!.favorite = false;
-        } else {
-            contact!.favorite = true;
-        }
+        this.contactId!.favorite = !this.contactId!.favorite
     }
 
     public editContact(): void {
-
-        const contact = this.showContactService.getContact();
-
-        contact!.edit = true;
+        this.contactsService.setEdit();
 
         this.updateForm = new FormGroup({
-            updateName: new FormControl(contact?.name, [Validators.required]),
-            updateSurname: new FormControl(contact?.surname, [Validators.required]),
-            updatePhone: new FormControl(contact?.phone, [Validators.pattern(this.pattern)]),
-            updateEmail: new FormControl(contact?.email)
+            name: new FormControl(this.contactId?.name, [Validators.required]),
+            surname: new FormControl(this.contactId?.surname, [Validators.required]),
+            phone: new FormControl(this.contactId?.phone, [Validators.pattern(this.pattern)]),
+            email: new FormControl(this.contactId?.email, [Validators.email])
         });
     }
 
     public updateContact(): void {
-        this.showContactService.getContact()!.name = this.updateForm.controls.updateName.value;
-        this.showContactService.getContact()!.surname = this.updateForm.controls.updateSurname.value;
-        this.showContactService.getContact()!.phone = this.updateForm.controls.updatePhone.value;
-        this.showContactService.getContact()!.email = this.updateForm.controls.updateEmail.value;
+        this.contactId!.name = this.updateForm.controls.name.value;
+        this.contactId!.surname = this.updateForm.controls.surname.value;
+        this.contactId!.phone = this.updateForm.controls.phone.value;
+        this.contactId!.email = this.updateForm.controls.email.value;
 
-        this.showContactService.getContact()!.edit = false;
+        this.contactsService.setNoEdit();
     }
 
     public cancelUpdateContact(): void {
-        this.showContactService.getContact()!.edit = false;
-    }
-
-    public checkFormValidity(): boolean {
-        return ((this.getFormControl('updatePhone').value?.trim() == '' && this.getFormControl('updateEmail').value?.trim() == '') || this.getFormControl('updatePhone').invalid || this.getFormControl('updateEmail').invalid)
-    }
-
-    public getFormControl(formControl: string): AbstractControl {
-        return this.updateForm.get(formControl)!;
-    }
-
-    public checkAbstractControlValidity(abstractControl: AbstractControl): boolean {
-        return abstractControl.invalid && (abstractControl.touched || abstractControl.dirty);
-    }
-
-    public showBtnTitle(): string {
-        if (this.getFormControl('updateName').value == '') {
-            return 'Enter new name';
-        }
-        if (this.getFormControl('updateSurname').value == '') {
-            return 'Enter new surname';
-        }
-        if (this.getFormControl('updatePhone').value == '' && this.getFormControl('updateEmail').value == '') {
-            return 'Enter new phone number or new email address';
-        }
-
-        if (this.getFormControl('updatePhone').invalid) {
-            return 'Phone number is invalid'
-        }
-
-        if (this.getFormControl('updateEmail').invalid) {
-            return 'Email address is invalid'
-        }
-
-        return '';
+        this.contactsService.setNoEdit();
     }
 }

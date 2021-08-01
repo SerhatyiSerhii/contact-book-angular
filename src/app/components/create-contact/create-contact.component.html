@@ -1,15 +1,4 @@
-<section>
-    <div class="container">
-        <div class="contacts-list">
-            <div class="top-line">
-                <add-contact></add-contact>
-            </div>
-            <div class="list-container">
-                <contacts-list [contactList]="contactsListParent"></contacts-list>
-            </div>
-        </div>
-        <div class="contact">
-            <contact-details *ngIf="contactDetailsParent" [contactDetails]="contactDetailsParent"></contact-details>
-        </div>
-    </div>
-</section>
+<div class="top-line">
+    <add-contact-button (click)="form.animateFormDisplay()"></add-contact-button>
+    <add-contact-form #form></add-contact-form>
+</div>

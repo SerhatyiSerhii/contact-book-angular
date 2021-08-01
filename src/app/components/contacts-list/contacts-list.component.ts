@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { ContactItem } from "src/app/models/contac-item";
-import { ShowContactService } from "src/app/services/show-contact.service";
+import { ContactsService } from "src/app/services/contacts.service";
+
 
 @Component({
     selector: 'contacts-list',
@@ -10,12 +11,17 @@ import { ShowContactService } from "src/app/services/show-contact.service";
 
 export class ContactsListComponent {
 
-    @Input() public contactList: ContactItem[];
+    @Output() selectId: EventEmitter<number> = new EventEmitter<number>()
 
-    constructor(private showContactService: ShowContactService) {}
+    constructor(private contactsService: ContactsService) { }
+
+    public get contactList() {
+        return this.contactsService.getContacts();
+    }
 
     onClick(contact: ContactItem) {
-        this.showContactService.setContact(contact);
-        this.showContactService.setNoEdit();
+        this.contactsService.setNoEdit();
+
+        this.selectId.next(contact.id);
     }
 }
