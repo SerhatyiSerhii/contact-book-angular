@@ -7,6 +7,7 @@
             </div>
         </div>
         <div class="contact">
+            <div> {{ test }}</div>
             <contact-details *ngIf="selectedContactParent" [selectedContactId]="selectedContactParent" (resetContact)="selectedContactParent = $event"></contact-details>
         </div>
     </div>
