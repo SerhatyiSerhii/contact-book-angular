@@ -1,17 +1,15 @@
-<!-- <div class="form" *ngIf="showFormVisible" #newContact [class.visible]="visible"> -->
-<div class="form" *ngIf="showFormVisible" [@addContactForm]="stateName"
-    (@addContactForm.start)="animateAddContactForm()" (@addContactForm.done)="hideAddContactForm($event)">
+<div class="form" [class.visible]="visible">
     <form [formGroup]="updateForm">
         <span>New Contact</span>
 
         <label *ngFor="let item of contactFields">
-            {{item[0].toUpperCase() + item.slice(1)}}
-            <input type="text" placeholder="{{item[0].toUpperCase() + item.slice(1)}}" formControlName="{{item}}"
-                [class.alert]="checkAbstractControlValidity(item)">
+            <input type="text" [placeholder]="item.title" [formControlName]="item.name"
+                [class.alert]="checkAbstractControlValidity(item.name)">
         </label>
 
         <div class="buttons">
-            <button (click)="cancelContactCreation()">Cancel</button>
+            <button type="button" (click)="cancelContactCreation()"
+                (keydown.enter)="$event.preventDefault()">Cancel</button>
             <button type="submit" [disabled]="updateForm.invalid || checkFormValidity()" (click)="createContact()"
                 [title]="showBtnTitle()">Create
                 contact</button>

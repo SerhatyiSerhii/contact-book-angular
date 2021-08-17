@@ -1,4 +1,6 @@
 <div class="top-line">
-    <add-contact-button (click)="form.animateFormDisplay()"></add-contact-button>
-    <add-contact-form #form></add-contact-form>
+    <button type="button" class="add-contact" [title]="'Add contact'" (click)="toggleForm()" (keydown.enter)="$event.preventDefault()">
+        <span class="plus"></span>
+    </button>
+    <add-contact-form [visible]="publicVisible" (createdContact)="toggleForm()"></add-contact-form>
 </div>

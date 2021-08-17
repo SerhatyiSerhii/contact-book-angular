@@ -5,4 +5,11 @@ import { Component } from "@angular/core";
     templateUrl: './create-contact.component.html',
     styleUrls: ['./create-contact.component.scss']
 })
-export class CreateContactComponent {}
+export class CreateContactComponent {
+
+    public publicVisible: boolean = false;
+
+    public toggleForm(): void {
+        this.publicVisible = !this.publicVisible;
+    }
+}

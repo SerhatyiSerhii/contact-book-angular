@@ -9,24 +9,13 @@ export class ContactsService {
         new ContactItem('Ivan', 'Ivanov', '123456879', 'ivanov@ivan.test'),
         new ContactItem('Petr', 'Petrov', '987654321', 'petrov@petr.test')
     ];
-    public edit: boolean = false;
-
-    public setEdit() {
-        this.edit = true;
-    }
-
-    public setNoEdit() {
-        this.edit = false;
-    }
 
     public getContacts(): ContactItem[] {
         return this.contacts;
     }
 
     public getContactById(id: number): ContactItem | undefined {
-        return this.contacts.find(contact => {
-            return contact.id == id;
-        });
+        return this.contacts.find(contact => contact.id == id);
     }
 
     public addContact(contact: ContactItem): void {
@@ -34,12 +23,22 @@ export class ContactsService {
     }
 
     public deleteContact(contact: ContactItem): void {
-        this.contacts.splice(this.contacts.indexOf(contact), 1);
+        this.contacts = this.contacts.filter((item) => {
+            return contact.id != item.id;
+        });
     }
 
     public sortContacts(): void {
         this.contacts.sort((a, b) => {
-            return a.name.toLowerCase().localeCompare(b.name.toLowerCase(), undefined, { numeric: true, sensitivity: 'base' });
+            if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                return 1;
+            }
+
+            if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                return -1;
+            }
+
+            return 0;
         })
     }
 }

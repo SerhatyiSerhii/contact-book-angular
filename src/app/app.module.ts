@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { AddContactButtonComponent } from './components/add-contact-button/add-contact-button.component';
 import { AddContactFormComponent } from './components/add-contact-form/add-contact-form.component';
 import { ContactDetailsComponent } from './components/contact-details.component/contact-details.component';
 import { ContactsListComponent } from './components/contacts-list/contacts-list.component';
@@ -16,7 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     CreateContactComponent,
     ContactsListComponent,
-    AddContactButtonComponent,
     AddContactFormComponent,
     ContactDetailsComponent
   ],

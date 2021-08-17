@@ -1,37 +1,26 @@
 <div class="contact-details">
-    <div class="details" *ngIf="!contactsService.edit">
-        <h3>
-            Name: {{contactId!.name}} {{contactId!.surname}}
-        </h3>
-        <h3 *ngIf="contactId!.phone">
-            Phone: {{contactId!.phone}}
-        </h3>
-        <h3 *ngIf="contactId!.email">
-            Email: {{contactId!.email}}
-        </h3>
-    </div>
+    <div class="details" [formGroup]="updateForm" >
 
-    <div class="update" *ngIf="contactsService.edit" [formGroup]="updateForm">
+        <span class="details-block" *ngFor="let item of contactDetails" [class.edit]="contactEdit">
+            <h3>
+                {{ item.value }}:&nbsp;
+            </h3>
+            <h3 *ngIf="!contactEdit">
+                {{ getContactDetail(item.key) }}
+            </h3>
+            <input *ngIf="contactEdit" [formControlName]="item.key" (keydown.enter)="updateContact()">
+        </span>
 
-        <label *ngFor="let item of contactFields">
-            New {{item[0].toUpperCase() + item.slice(1)}}:
-            <input type="text" formControlName="{{item}}"
-                [class.alert]="checkAbstractControlValidity(item)">
-        </label>
-
-        <div class="buttons update">
-            <button (click)="cancelUpdateContact()">Cancel</button>
-            <button [disabled]="updateForm.invalid || checkFormValidity()" (click)="updateContact()"
-                [title]="showBtnTitle()">Update</button>
-        </div>
-
+        <button *ngIf="contactEdit" (click)="updateContact()" [disabled]="updateForm.invalid">Update</button>
     </div>
 
     <div class="buttons">
-        <button (click)="makeFavorite()">Favorite</button>
-        <button (click)="editContact()">Edit</button>
+        <button (click)="toggleFavorite()">Favorite</button>
+        <button (click)="editContact()" *ngIf="!contactEdit">Edit</button>
+        <button (click)="cancelUpdateContact()" *ngIf="contactEdit">Cancel</button>
         <button (click)="reset()">Close</button>
-        <button (click)="deleteContact()">Delete</button>
     </div>
+
+    <button (click)="deleteContact()" class="delete-btn">Delete</button>
 
 </div>

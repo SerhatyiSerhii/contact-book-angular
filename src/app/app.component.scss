@@ -11,11 +11,13 @@ section {
     box-sizing: border-box;
 }
 
-.contacts-list {
+aside {
     background-color: white;
     width: 35%;
     border-right: 1px solid black;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .contact {
@@ -24,7 +26,6 @@ section {
 }
 
 .list-container {
-    max-height: 750px;
     overflow-y: auto;
 }
 

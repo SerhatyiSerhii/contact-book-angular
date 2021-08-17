@@ -1,13 +1,14 @@
 <section>
     <div class="container">
-        <div class="contacts-list">
+        <aside>
             <create-contact></create-contact>
-            <div class="list-container" #listContainer>
+            <div class="list-container">
                 <contacts-list (selectId)="selectContact($event)"></contacts-list>
             </div>
-        </div>
+        </aside>
         <div class="contact">
-            <contact-details *ngIf="selectedContactParent" [selectedContactId]="selectedContactParent" (resetContact)="selectedContactParent = $event"></contact-details>
+            <contact-details *ngIf="selectedContactParent" [selectedContactId]="selectedContactParent"
+                (resetContact)="selectedContactParent = $event"></contact-details>
         </div>
     </div>
 </section>

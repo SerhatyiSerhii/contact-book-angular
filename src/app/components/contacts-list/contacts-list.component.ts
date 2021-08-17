@@ -20,8 +20,6 @@ export class ContactsListComponent {
     }
 
     onClick(contact: ContactItem) {
-        this.contactsService.setNoEdit();
-
-        this.selectId.next(contact.id);
+        this.selectId.emit(contact.id);
     }
 }

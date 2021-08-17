@@ -1,9 +1,17 @@
 import { AbstractControl, FormGroup } from "@angular/forms";
 
-export class ContactFormService {
+export abstract class ContactFormComponent {
     public updateForm: FormGroup;
     public pattern: string = '^(?=.*[0-9])[- +()0-9]+$';
-    public contactFields: string[] = ['name', 'surname', 'phone', 'email'];
+    public contactFields: {
+        name: string;
+        title: string;
+    }[] = [
+            { name: 'name', title: 'Name' },
+            { name: 'surname', title: 'Surname' },
+            { name: 'phone', title: 'Phone' },
+            { name: 'email', title: 'Email' }
+        ];
 
     public getFormControl(formControl: string): AbstractControl {
         return this.updateForm.get(formControl)!;

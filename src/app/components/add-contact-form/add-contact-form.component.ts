@@ -1,100 +1,43 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
-import { ContactsListService } from "src/app/services/contacts-list.service";
 import { ContactsService } from "src/app/services/contacts.service";
-import { trigger, state, style, animate, transition } from "@angular/animations";
-import { ContactFormService } from "src/app/models/contact-form";
+import { ContactFormComponent } from "src/app/components/contact-form/contact-form.component";
 
 @Component({
     selector: 'add-contact-form',
     templateUrl: './add-contact-form.component.html',
-    styleUrls: ['./add-contact-form.component.scss'],
-    animations: [
-        trigger('addContactForm', [
-            state('show', style({
-                height: '270px'
-            })),
-            state('hide', style({
-                height: 0
-            })),
-            transition('show <=> hide', animate('500ms ease'))
-        ])
-    ]
+    styleUrls: ['./add-contact-form.component.scss']
 })
 
-export class AddContactFormComponent extends ContactFormService {
+export class AddContactFormComponent extends ContactFormComponent {
 
-    public visible: boolean = false;
+    @Input() public visible: boolean;
+    @Output() public createdContact: EventEmitter<boolean> = new EventEmitter<boolean>();
     public showFormVisible: boolean = false;
     public animationAllowed: boolean = true;
 
-    constructor(private contactsService: ContactsService, private contactsList: ContactsListService) {
+    constructor(private contactsService: ContactsService) {
         super();
-     }
 
-    public get stateName(): string {
-        return this.visible ? 'show' : 'hide';
-    }
-
-    private contactsListResize(): void {
-        const contactList = this.contactsList.selectList().nativeElement;
-
-        const resizeListHeight = () => {
-            contactList.style.maxHeight = window.innerHeight - contactList.offsetTop + 'px';
-
-            if (this.animationAllowed) {
-                window.requestAnimationFrame(resizeListHeight);
-            }
-        }
-
-        window.requestAnimationFrame(resizeListHeight);
-    }
-
-    public animateAddContactForm(): void {
-        this.animationAllowed = true;
-    }
-
-    public hideAddContactForm(event: any): void {
-        if (!this.visible && event.fromState == 'show') {
-            this.showFormVisible = !this.showFormVisible;
-        }
-
-        if (event.toState == 'show' || event.toState == 'void') {
-            this.animationAllowed = !this.animationAllowed;
-        }
+        this.updateForm = new FormGroup({
+            name: new FormControl('', [Validators.required]),
+            surname: new FormControl('', [Validators.required]),
+            phone: new FormControl('', [Validators.pattern(this.pattern)]),
+            email: new FormControl('', [Validators.email])
+        });
     }
 
     public animateFormDisplay(): void {
-        setTimeout(() => {
-            this.contactsListResize();
-        });
-
-        if (!this.visible) {
-
-            this.updateForm = new FormGroup({
-                name: new FormControl('', [Validators.required]),
-                surname: new FormControl('', [Validators.required]),
-                phone: new FormControl('', [Validators.pattern(this.pattern)]),
-                email: new FormControl('', [Validators.email])
-            });
-
-            this.showFormVisible = !this.showFormVisible;
-
-            setTimeout(() => {
-                this.visible = !this.visible;
-            });
-        } else {
-            this.visible = !this.visible;
-        }
-
+        this.createdContact.emit(false);
+        this.updateForm.reset();
     }
 
     public createContact(): void {
         const map = new Map();
 
         for (let field of this.contactFields) {
-            map.set(field, this.getFormControl(field).value?.trim());
+            map.set(field, this.getFormControl(field.name).value?.trim());
         }
 
         const [name, surname, phone, email] = map.values();
@@ -108,12 +51,5 @@ export class AddContactFormComponent extends ContactFormService {
 
     public cancelContactCreation(): void {
         this.animateFormDisplay();
-    }
-
-    public ngAfterViewInit(): void {
-        window.addEventListener('resize', () => {
-            const contactList = this.contactsList.selectList().nativeElement;
-            contactList.style.maxHeight = window.innerHeight - contactList.offsetTop + 'px';
-        });
     }
 }

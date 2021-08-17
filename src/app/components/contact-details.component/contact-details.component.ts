@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
-import { ContactFormService } from "src/app/models/contact-form";
+import { ContactFormComponent } from "src/app/components/contact-form/contact-form.component";
 import { ContactsService } from "src/app/services/contacts.service";
 
 
@@ -11,54 +11,100 @@ import { ContactsService } from "src/app/services/contacts.service";
     styleUrls: ['./contact-details.component.scss']
 })
 
-export class ContactDetailsComponent extends ContactFormService {
+export class ContactDetailsComponent extends ContactFormComponent implements OnChanges{
 
-    @Input() selectedContactId: number | undefined;
-    @Output() resetContact: EventEmitter<undefined> = new EventEmitter<undefined>();
+    @Input() public selectedContactId: number;
+    @Output() public resetContact: EventEmitter<void> = new EventEmitter<void>();
+    public contactDetails = [
+        { key: 'fullName', value: 'Full name' },
+        { key: 'phone', value: 'Phone' },
+        { key: 'email', value: 'Email' }
+    ];
+
+    public contactEdit: boolean;
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.selectedContactId) {
+            this.contactEdit = false;
+        }
+    }
 
     constructor(public contactsService: ContactsService) {
         super();
+
+        this.updateForm = new FormGroup({
+            fullName: new FormControl('', Validators.required),
+            phone: new FormControl('', Validators.pattern(this.pattern)),
+            email: new FormControl('', Validators.email)
+        });
+
+        this.contactEdit = false;
     }
 
-    public get contactId(): ContactItem | undefined {
-        return this.contactsService.getContactById(this.selectedContactId!);
+    public get contactId(): ContactItem {
+        return this.contactsService.getContactById(this.selectedContactId);
+    }
+
+    public getContactDetail(detail: string): string | number | boolean {
+        if (detail == 'fullName') {
+            return this.contactId.name + ' ' + this.contactId.surname;
+        }
+
+        const key = detail as keyof ContactItem;
+
+        return this.contactId[key]!;
+
     }
 
     public reset(): void {
-        this.resetContact.emit(undefined);
+        this.resetContact.emit();
     }
 
     public deleteContact(): void {
-        this.contactsService.deleteContact(this.contactId!);
+        this.contactsService.deleteContact(this.contactId);
 
         this.reset();
     }
 
-    public makeFavorite(): void {
-        this.contactId!.favorite = !this.contactId!.favorite
+    public toggleFavorite(): void {
+        this.contactId.favorite = !this.contactId.favorite
     }
 
     public editContact(): void {
-        this.contactsService.setEdit();
+        this.contactEdit = !this.contactEdit;
 
-        this.updateForm = new FormGroup({
-            name: new FormControl(this.contactId?.name, [Validators.required]),
-            surname: new FormControl(this.contactId?.surname, [Validators.required]),
-            phone: new FormControl(this.contactId?.phone, [Validators.pattern(this.pattern)]),
-            email: new FormControl(this.contactId?.email, [Validators.email])
-        });
+
+        const { phone, email } = this.contactId;
+        const fullName = this.contactId.name + ' ' + this.contactId.surname;
+        const editFields = [fullName, phone, email];
+
+        for (let i = 0; i < editFields.length; i++) {
+            Object.values(this.updateForm.controls)[i].setValue(editFields[i]);
+        }
     }
 
     public updateContact(): void {
-        this.contactId!.name = this.updateForm.controls.name.value;
-        this.contactId!.surname = this.updateForm.controls.surname.value;
+        const fullName = this.updateForm.get('fullName')!.value.split(' ').slice(0, 2);
+
+        if (fullName.length > 1) {
+            this.contactId!.surname = fullName[1];
+        }
+
+        if (fullName.length == 1) {
+            this.contactId!.surname = '';
+        }
+
+        this.contactId!.name = fullName[0];
+
         this.contactId!.phone = this.updateForm.controls.phone.value;
         this.contactId!.email = this.updateForm.controls.email.value;
 
-        this.contactsService.setNoEdit();
+        this.contactEdit = !this.contactEdit;
+
+        this.contactsService.sortContacts();
     }
 
     public cancelUpdateContact(): void {
-        this.contactsService.setNoEdit();
+        this.contactEdit = !this.contactEdit;
     }
 }

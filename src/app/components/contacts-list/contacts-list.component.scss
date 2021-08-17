@@ -28,10 +28,14 @@ ul {
             font-weight: bolder;
 
             &.favorite::after {
-                content: '\2B50';
+                // content: '\2B50';
+                content: '\2605';
+                color: #76b852;
                 display: block;
                 position: absolute;
                 right: 10px;
+                font-size: 25px;
+                line-height: 25px;
             }
 
             span:not(:last-child) {
