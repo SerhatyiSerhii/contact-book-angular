@@ -11,49 +11,43 @@ import { ContactsService } from "src/app/services/contacts.service";
     styleUrls: ['./contact-details.component.scss']
 })
 
-export class ContactDetailsComponent extends ContactFormComponent implements OnChanges{
+export class ContactDetailsComponent extends ContactFormComponent implements OnChanges {
 
     @Input() public selectedContactId: number;
     @Output() public resetContact: EventEmitter<void> = new EventEmitter<void>();
-    public contactDetails = [
-        { key: 'fullName', value: 'Full name' },
-        { key: 'phone', value: 'Phone' },
-        { key: 'email', value: 'Email' }
-    ];
+    public contactEdit: boolean = false;
+    private contact: ContactItem;
 
-    public contactEdit: boolean;
+    constructor(private contactsService: ContactsService) {
+        super();
+    }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.selectedContactId) {
             this.contactEdit = false;
+
+            this.getContact();
         }
     }
 
-    constructor(public contactsService: ContactsService) {
-        super();
-
+    public ngOnInit(): void {
         this.updateForm = new FormGroup({
-            fullName: new FormControl('', Validators.required),
+            name: new FormControl('', Validators.required),
+            surname: new FormControl('', Validators.required),
             phone: new FormControl('', Validators.pattern(this.pattern)),
             email: new FormControl('', Validators.email)
         });
-
-        this.contactEdit = false;
     }
 
-    public get contactId(): ContactItem {
-        return this.contactsService.getContactById(this.selectedContactId);
+    public getContact(): void {
+        this.contact = this.contactsService.getContactById(this.selectedContactId);
     }
 
     public getContactDetail(detail: string): string | number | boolean {
-        if (detail == 'fullName') {
-            return this.contactId.name + ' ' + this.contactId.surname;
-        }
 
         const key = detail as keyof ContactItem;
 
-        return this.contactId[key]!;
-
+        return this.contact[key];
     }
 
     public reset(): void {
@@ -61,50 +55,45 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public deleteContact(): void {
-        this.contactsService.deleteContact(this.contactId);
+        this.contactsService.deleteContact(this.contact.id);
 
         this.reset();
     }
 
     public toggleFavorite(): void {
-        this.contactId.favorite = !this.contactId.favorite
+        this.contact.favorite = !this.contact.favorite
     }
 
     public editContact(): void {
         this.contactEdit = !this.contactEdit;
 
+        for (let control in this.updateForm.controls) {
 
-        const { phone, email } = this.contactId;
-        const fullName = this.contactId.name + ' ' + this.contactId.surname;
-        const editFields = [fullName, phone, email];
+            const key = control as keyof ContactItem;
 
-        for (let i = 0; i < editFields.length; i++) {
-            Object.values(this.updateForm.controls)[i].setValue(editFields[i]);
+            this.updateForm.controls[control].setValue(this.contact[key]);
         }
     }
 
     public updateContact(): void {
-        const fullName = this.updateForm.get('fullName')!.value.split(' ').slice(0, 2);
+        const updatedContact = new ContactItem(
+            this.updateForm.controls.name.value,
+            this.updateForm.controls.surname.value,
+            this.updateForm.controls.phone.value,
+            this.updateForm.controls.email.value,
+            this.contact.id
+        );
 
-        if (fullName.length > 1) {
-            this.contactId!.surname = fullName[1];
-        }
+        this.contactsService.updateContact(updatedContact);
 
-        if (fullName.length == 1) {
-            this.contactId!.surname = '';
-        }
+        this.getContact();
 
-        this.contactId!.name = fullName[0];
-
-        this.contactId!.phone = this.updateForm.controls.phone.value;
-        this.contactId!.email = this.updateForm.controls.email.value;
-
-        this.contactEdit = !this.contactEdit;
+        this.contactEdit = false;
 
         this.contactsService.sortContacts();
     }
 
     public cancelUpdateContact(): void {
-        this.contactEdit = !this.contactEdit;
+        this.contactEdit = false;
     }
 }

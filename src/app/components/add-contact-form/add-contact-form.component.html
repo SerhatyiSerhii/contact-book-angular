@@ -1,18 +1,17 @@
 <div class="form" [class.visible]="visible">
-    <form [formGroup]="updateForm">
+    <form [formGroup]="updateForm" (submit)="createContact()">
         <span>New Contact</span>
 
         <label *ngFor="let item of contactFields">
             <input type="text" [placeholder]="item.title" [formControlName]="item.name"
-                [class.alert]="checkAbstractControlValidity(item.name)">
+                [class.alert]="isAbstractControlInvalid(item.name)">
         </label>
 
         <div class="buttons">
-            <button type="button" (click)="cancelContactCreation()"
-                (keydown.enter)="$event.preventDefault()">Cancel</button>
-            <button type="submit" [disabled]="updateForm.invalid || checkFormValidity()" (click)="createContact()"
-                [title]="showBtnTitle()">Create
-                contact</button>
+            <button type="button" (click)="cancelContactCreation()">Cancel</button> <!-- Click on button and then click enter to see the wrong magic -->
+            <button type="submit" [disabled]="updateForm.invalid || isFormInvalid()" [title]="showBtnTitle()">Create
+                contact
+            </button>
         </div>
     </form>
 </div>

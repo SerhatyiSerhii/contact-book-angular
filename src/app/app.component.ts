@@ -8,7 +8,7 @@ import { ContactsService } from "src/app/services/contacts.service";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    public selectedContactParent: number | void;
+    public selectedContactParent: number;
 
     constructor(private contactService: ContactsService) { }
 
@@ -22,5 +22,9 @@ export class AppComponent implements OnInit {
         }
 
         this.contactService.sortContacts();
+    }
+
+    public resetContact(): void {
+        this.selectContact(null);
     }
 }

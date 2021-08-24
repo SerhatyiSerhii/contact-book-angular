@@ -8,7 +8,7 @@
         </aside>
         <div class="contact">
             <contact-details *ngIf="selectedContactParent" [selectedContactId]="selectedContactParent"
-                (resetContact)="selectedContactParent = $event"></contact-details>
+                (resetContact)="resetContact()"></contact-details>
         </div>
     </div>
 </section>

@@ -12,8 +12,9 @@
 }
 
 .details {
+    width: 265px;
 
-    h3 {
+    p {
         font-size: 20px;
         line-height: 15px;
 
@@ -31,8 +32,10 @@
     }
 
     button {
-        display: block;
         margin: 5px auto 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 
@@ -87,4 +90,8 @@
         display: flex;
         justify-content: space-around;
     }
+}
+
+.ng-invalid {
+    outline-color: red;
 }

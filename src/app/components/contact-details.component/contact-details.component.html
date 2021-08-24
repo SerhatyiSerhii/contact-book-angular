@@ -1,18 +1,18 @@
 <div class="contact-details">
-    <div class="details" [formGroup]="updateForm" >
+    <form class="details" [formGroup]="updateForm" (submit)="updateContact()">
 
-        <span class="details-block" *ngFor="let item of contactDetails" [class.edit]="contactEdit">
-            <h3>
-                {{ item.value }}:&nbsp;
-            </h3>
-            <h3 *ngIf="!contactEdit">
-                {{ getContactDetail(item.key) }}
-            </h3>
-            <input *ngIf="contactEdit" [formControlName]="item.key" (keydown.enter)="updateContact()">
+        <span class="details-block" *ngFor="let item of contactFields" [class.edit]="contactEdit">
+            <p>
+                {{ item.title }}:&nbsp;
+            </p>
+            <p *ngIf="!contactEdit">
+                {{ getContactDetail(item.name) }}
+            </p>
+            <input *ngIf="contactEdit" [formControlName]="item.name">
         </span>
 
-        <button *ngIf="contactEdit" (click)="updateContact()" [disabled]="updateForm.invalid">Update</button>
-    </div>
+        <button *ngIf="contactEdit"  [disabled]="updateForm.invalid">Update</button>
+    </form>
 
     <div class="buttons">
         <button (click)="toggleFavorite()">Favorite</button>

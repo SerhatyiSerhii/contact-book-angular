@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
 import { ContactsService } from "src/app/services/contacts.service";
@@ -10,16 +10,16 @@ import { ContactFormComponent } from "src/app/components/contact-form/contact-fo
     styleUrls: ['./add-contact-form.component.scss']
 })
 
-export class AddContactFormComponent extends ContactFormComponent {
+export class AddContactFormComponent extends ContactFormComponent implements OnInit {
 
     @Input() public visible: boolean;
-    @Output() public createdContact: EventEmitter<boolean> = new EventEmitter<boolean>();
-    public showFormVisible: boolean = false;
-    public animationAllowed: boolean = true;
+    @Output() public closingEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     constructor(private contactsService: ContactsService) {
         super();
+    }
 
+    private createFormGroup(): void {
         this.updateForm = new FormGroup({
             name: new FormControl('', [Validators.required]),
             surname: new FormControl('', [Validators.required]),
@@ -28,9 +28,14 @@ export class AddContactFormComponent extends ContactFormComponent {
         });
     }
 
-    public animateFormDisplay(): void {
-        this.createdContact.emit(false);
-        this.updateForm.reset();
+    public ngOnInit(): void {
+        this.createFormGroup();
+    }
+
+    private closeAddContactForm(): void {
+        this.closingEmitter.emit();
+
+        this.createFormGroup();
     }
 
     public createContact(): void {
@@ -44,12 +49,12 @@ export class AddContactFormComponent extends ContactFormComponent {
 
         this.contactsService.addContact(new ContactItem(name, surname, phone, email));
 
-        this.animateFormDisplay();
+        this.closeAddContactForm();
 
         this.contactsService.sortContacts();
     }
 
     public cancelContactCreation(): void {
-        this.animateFormDisplay();
+        this.closeAddContactForm();
     }
 }

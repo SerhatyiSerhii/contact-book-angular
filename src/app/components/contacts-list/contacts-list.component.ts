@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { ContactItem } from "src/app/models/contac-item";
 import { ContactsService } from "src/app/services/contacts.service";
 
@@ -9,17 +9,22 @@ import { ContactsService } from "src/app/services/contacts.service";
     styleUrls: ['./contacts-list.component.scss']
 })
 
-export class ContactsListComponent {
+export class ContactsListComponent implements OnInit {
 
-    @Output() selectId: EventEmitter<number> = new EventEmitter<number>()
+    @Output() selectId: EventEmitter<number> = new EventEmitter<number>();
+    public contactList: ContactItem[];
 
     constructor(private contactsService: ContactsService) { }
 
-    public get contactList() {
-        return this.contactsService.getContacts();
+    public ngOnInit(): void {
+        this.contactList = this.contactsService.getContacts()
+
+        this.contactsService.getContactsListUpdated().subscribe(() => {
+            this.contactList = this.contactsService.getContacts();
+        });
     }
 
-    onClick(contact: ContactItem) {
+    public onClick(contact: ContactItem): void {
         this.selectId.emit(contact.id);
     }
 }

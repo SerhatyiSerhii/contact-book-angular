@@ -2,7 +2,7 @@ import { AbstractControl, FormGroup } from "@angular/forms";
 
 export abstract class ContactFormComponent {
     public updateForm: FormGroup;
-    public pattern: string = '^(?=.*[0-9])[- +()0-9]+$';
+    protected pattern: string = '^(?=.*[0-9])[- +()0-9]+$';
     public contactFields: {
         name: string;
         title: string;
@@ -13,31 +13,31 @@ export abstract class ContactFormComponent {
             { name: 'email', title: 'Email' }
         ];
 
-    public getFormControl(formControl: string): AbstractControl {
+    protected getFormControl(formControl: string): AbstractControl {
         return this.updateForm.get(formControl)!;
     }
 
-    public checkFormValidity(): boolean {
-        return ((this.getFormControl('phone').value?.trim() == '' && this.getFormControl('email').value?.trim() == '')
+    public isFormInvalid(): boolean {
+        return ((this.getFormControl('phone').value?.trim() === '' && this.getFormControl('email').value?.trim() === '')
             || this.getFormControl('phone').invalid
             || this.getFormControl('email').invalid
         )
     }
 
-    public checkAbstractControlValidity(formControl: string): boolean {
+    public isAbstractControlInvalid(formControl: string): boolean {
         const abstractControl = this.getFormControl(formControl);
 
         return abstractControl.invalid && (abstractControl.touched || abstractControl.dirty);
     }
 
     public showBtnTitle(): string {
-        if (this.getFormControl('name').value == '') {
+        if (this.getFormControl('name').value === '') {
             return 'Enter new name';
         }
-        if (this.getFormControl('surname').value == '') {
+        if (this.getFormControl('surname').value === '') {
             return 'Enter new surname';
         }
-        if (this.getFormControl('phone').value == '' && this.getFormControl('email').value == '') {
+        if (this.getFormControl('phone').value === '' && this.getFormControl('email').value === '') {
             return 'Enter new phone number or new email address';
         }
 
