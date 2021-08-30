@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
 import { ContactsService } from "src/app/services/contacts.service";
@@ -13,28 +13,21 @@ import { ContactFormComponent } from "src/app/components/contact-form/contact-fo
 export class AddContactFormComponent extends ContactFormComponent implements OnInit {
 
     @Input() public visible: boolean;
-    @Output() public closingEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() public formClosed: EventEmitter<void> = new EventEmitter<void>();
+
+    @ViewChildren('i') inputs: QueryList<ElementRef>;
 
     constructor(private contactsService: ContactsService) {
         super();
     }
 
-    private createFormGroup(): void {
-        this.updateForm = new FormGroup({
-            name: new FormControl('', [Validators.required]),
-            surname: new FormControl('', [Validators.required]),
-            phone: new FormControl('', [Validators.pattern(this.pattern)]),
-            email: new FormControl('', [Validators.email])
-        });
+    public ngOnChanges(): void {
+        if (this.visible) {
+            this.inputs.first.nativeElement.focus();
+        }
     }
 
     public ngOnInit(): void {
-        this.createFormGroup();
-    }
-
-    private closeAddContactForm(): void {
-        this.closingEmitter.emit();
-
         this.createFormGroup();
     }
 
@@ -50,11 +43,24 @@ export class AddContactFormComponent extends ContactFormComponent implements OnI
         this.contactsService.addContact(new ContactItem(name, surname, phone, email));
 
         this.closeAddContactForm();
-
-        this.contactsService.sortContacts();
     }
 
     public cancelContactCreation(): void {
         this.closeAddContactForm();
+    }
+
+    private closeAddContactForm(): void {
+        this.formClosed.emit();
+
+        this.createFormGroup();
+    }
+
+    private createFormGroup(): void {
+        this.updateForm = new FormGroup({
+            name: new FormControl('', [Validators.required]),
+            surname: new FormControl('', [Validators.required]),
+            phone: new FormControl('', [Validators.pattern(this.pattern)]),
+            email: new FormControl('', [Validators.email])
+        });
     }
 }

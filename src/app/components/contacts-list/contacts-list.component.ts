@@ -11,20 +11,26 @@ import { ContactsService } from "src/app/services/contacts.service";
 
 export class ContactsListComponent implements OnInit {
 
-    @Output() selectId: EventEmitter<number> = new EventEmitter<number>();
+    @Output() idSelected: EventEmitter<number> = new EventEmitter<number>();
     public contactList: ContactItem[];
 
     constructor(private contactsService: ContactsService) { }
 
     public ngOnInit(): void {
-        this.contactList = this.contactsService.getContacts()
+        this.contactsService.getContacts().then((data: ContactItem[]) => {
+            this.contactList = data;
+            this.contactsService.sortContacts();
+        });
 
         this.contactsService.getContactsListUpdated().subscribe(() => {
-            this.contactList = this.contactsService.getContacts();
+            this.contactsService.getContacts().then((data: ContactItem[]) => {
+                this.contactList = data;
+                this.contactsService.sortContacts();
+            });
         });
     }
 
     public onClick(contact: ContactItem): void {
-        this.selectId.emit(contact.id);
+        this.idSelected.emit(contact.id);
     }
 }

@@ -9,6 +9,7 @@ import { ContactDetailsComponent } from './components/contact-details.component/
 import { ContactsListComponent } from './components/contacts-list/contacts-list.component';
 import { CreateContactComponent } from './components/create-contact/create-contact.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

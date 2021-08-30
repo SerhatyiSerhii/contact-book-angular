@@ -1,27 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { ContactItem } from "src/app/models/contac-item";
-import { ContactsService } from "src/app/services/contacts.service";
+import { Component } from "@angular/core";
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
     public selectedContactParent: number;
 
-    constructor(private contactService: ContactsService) { }
+    constructor() { }
 
     public selectContact(id: number): void {
         this.selectedContactParent = id;
-    }
-
-    public ngOnInit(): void {
-        for (let i = 0; i <= 30; i++) {
-            this.contactService.addContact(new ContactItem(`Ivan${i}`, 'test', '111', 'test@test'));
-        }
-
-        this.contactService.sortContacts();
     }
 
     public resetContact(): void {

@@ -2,5 +2,5 @@
     <button type="button" class="add-contact" [title]="'Add contact'" (click)="toggleForm()">
         <span class="plus"></span>
     </button>
-    <add-contact-form [visible]="publicVisible" (closingEmitter)="toggleForm()"></add-contact-form>
+    <add-contact-form [visible]="visible" (formClosed)="cancelContactCreation()"></add-contact-form>
 </div>

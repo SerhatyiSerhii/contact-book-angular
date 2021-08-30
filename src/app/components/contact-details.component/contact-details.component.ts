@@ -40,14 +40,17 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public getContact(): void {
-        this.contact = this.contactsService.getContactById(this.selectedContactId);
+        this.contactsService.getContactById(this.selectedContactId).then((item: ContactItem) => {
+            this.contact = item;
+        })
     }
 
-    public getContactDetail(detail: string): string | number | boolean {
-
-        const key = detail as keyof ContactItem;
-
-        return this.contact[key];
+    public getContactDetail(detail: keyof ContactItem): string | number | boolean {
+        if (!this.contact) {
+            return '';
+        } else {
+            return this.contact[detail];
+        }
     }
 
     public reset(): void {
@@ -55,7 +58,7 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public deleteContact(): void {
-        this.contactsService.deleteContact(this.contact.id);
+        this.contactsService.deleteContact(this.selectedContactId);
 
         this.reset();
     }
@@ -65,7 +68,7 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public editContact(): void {
-        this.contactEdit = !this.contactEdit;
+        this.contactEdit = true;
 
         for (let control in this.updateForm.controls) {
 
@@ -81,16 +84,15 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
             this.updateForm.controls.surname.value,
             this.updateForm.controls.phone.value,
             this.updateForm.controls.email.value,
-            this.contact.id
         );
 
-        this.contactsService.updateContact(updatedContact);
+        this.contactsService.updateContact(this.selectedContactId, updatedContact);
+
+        this.contactsService.getContactById(this.selectedContactId);
 
         this.getContact();
 
         this.contactEdit = false;
-
-        this.contactsService.sortContacts();
     }
 
     public cancelUpdateContact(): void {

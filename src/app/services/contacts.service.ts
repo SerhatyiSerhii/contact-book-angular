@@ -1,46 +1,68 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ContactItem } from "../models/contac-item";
+import { ApiService } from "./api.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContactsService {
-    private contacts: ContactItem[] = [
-        new ContactItem('Ivan', 'Ivanov', '123456879', 'ivanov@ivan.test'),
-        new ContactItem('Petr', 'Petrov', '987654321', 'petrov@petr.test')
-    ];
+    private contacts: ContactItem[] = [];
 
     private contactsListUpdated$: Subject<void> = new Subject<void>();
+
+    constructor(private api: ApiService) { }
 
     public getContactsListUpdated(): Observable<void> {
         return this.contactsListUpdated$;
     }
 
-    public getContacts(): ContactItem[] {
+    public async getContacts(): Promise<ContactItem[]> {
+        await this.api.getContacts().then((data: ContactItem[])=> {
+            this.contacts = data;
+        });
+
         return this.contacts;
     }
 
-    public getContactById(id: number): ContactItem {
-        return this.contacts.find(contact => contact.id === id);
+    public async getContactById(id: number): Promise<ContactItem> {
+
+        let contact: ContactItem;
+
+        await this.api.getContactById(id).then((data: ContactItem) => {
+            contact = data;
+        });
+
+        return contact;
     }
 
     public addContact(contact: ContactItem): void {
-        this.contacts.push(contact);
-        this.contactsListUpdated$.next();
+
+        this.api.addContact(contact).subscribe(() => {
+            this.contactsListUpdated$.next();
+        });
     }
 
     public deleteContact(id: number): void {
-        this.contacts = this.contacts.filter((item) => {
-            return id != item.id;
-        });
-        this.contactsListUpdated$.next();
+
+        this.api.deleteContact(id).subscribe(() => {
+            this.contactsListUpdated$.next();
+        })
     }
 
-    public updateContact(contact: ContactItem): void {
-        this.deleteContact(contact.id);
-        this.addContact(contact);
-        this.contactsListUpdated$.next();
+    public updateContact(id: number, updatedContact: ContactItem): void {
+        const item = this.contacts.find(item => {
+            return item.id === id;
+        });
+
+        item.name = updatedContact.name;
+        item.surname = updatedContact.surname;
+        item.phone = updatedContact.phone;
+        item.email = updatedContact.email;
+
+        this.api.updateContact(id, updatedContact).subscribe(() => {
+            this.contactsListUpdated$.next();
+        });
     }
 
     public sortContacts(): void {
@@ -54,6 +76,6 @@ export class ContactsService {
             }
 
             return 0;
-        })
+        });
     }
 }

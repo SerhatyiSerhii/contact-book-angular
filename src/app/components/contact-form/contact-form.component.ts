@@ -1,10 +1,11 @@
 import { AbstractControl, FormGroup } from "@angular/forms";
+import { ContactItem } from "src/app/models/contac-item";
 
 export abstract class ContactFormComponent {
     public updateForm: FormGroup;
     protected pattern: string = '^(?=.*[0-9])[- +()0-9]+$';
     public contactFields: {
-        name: string;
+        name: keyof ContactItem;
         title: string;
     }[] = [
             { name: 'name', title: 'Name' },

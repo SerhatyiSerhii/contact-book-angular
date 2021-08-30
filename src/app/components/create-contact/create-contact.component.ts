@@ -7,9 +7,13 @@ import { Component } from "@angular/core";
 })
 export class CreateContactComponent {
 
-    public publicVisible: boolean = false;
+    public visible: boolean = false;
 
     public toggleForm(): void {
-        this.publicVisible = !this.publicVisible;
+        this.visible = !this.visible;
+    }
+
+    public cancelContactCreation(): void {
+        this.visible = false;
     }
 }
