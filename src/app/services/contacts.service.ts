@@ -2,13 +2,12 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { ContactItem } from "../models/contac-item";
 import { ApiService } from "./api.service";
+import { tap } from "rxjs/operators"
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContactsService {
-    private contacts: ContactItem[] = [];
-
     private contactsListUpdated$: Subject<void> = new Subject<void>();
 
     constructor(private api: ApiService) { }
@@ -17,56 +16,36 @@ export class ContactsService {
         return this.contactsListUpdated$;
     }
 
-    public async getContacts(): Promise<ContactItem[]> {
-        await this.api.getContacts().then((data: ContactItem[])=> {
-            this.contacts = data;
-        });
-
-        return this.contacts;
+    public getContacts(): Observable<ContactItem[]> {
+        return this.api.getContacts().pipe(tap((contacts: ContactItem[]) => {
+            this.sortContacts(contacts);
+        }));
     }
 
-    public async getContactById(id: number): Promise<ContactItem> {
-
-        let contact: ContactItem;
-
-        await this.api.getContactById(id).then((data: ContactItem) => {
-            contact = data;
-        });
-
-        return contact;
+    public getContactById(id: number): Observable<ContactItem> {
+        return this.api.getContactById(id);
     }
 
-    public addContact(contact: ContactItem): void {
-
-        this.api.addContact(contact).subscribe(() => {
+    public addContact(contact: ContactItem): Observable<ContactItem> {
+        return this.api.addContact(contact).pipe(tap(() => {
             this.contactsListUpdated$.next();
-        });
+        }));
     }
 
-    public deleteContact(id: number): void {
-
-        this.api.deleteContact(id).subscribe(() => {
+    public deleteContact(id: number): Observable<ContactItem> {
+        return this.api.deleteContact(id).pipe(tap(() => {
             this.contactsListUpdated$.next();
-        })
+        }));
     }
 
-    public updateContact(id: number, updatedContact: ContactItem): void {
-        const item = this.contacts.find(item => {
-            return item.id === id;
-        });
-
-        item.name = updatedContact.name;
-        item.surname = updatedContact.surname;
-        item.phone = updatedContact.phone;
-        item.email = updatedContact.email;
-
-        this.api.updateContact(id, updatedContact).subscribe(() => {
+    public updateContact(id: number, updatedContact: ContactItem): Observable<ContactItem> {
+        return this.api.updateContact(id, updatedContact).pipe(tap(() => {
             this.contactsListUpdated$.next();
-        });
+        }));
     }
 
-    public sortContacts(): void {
-        this.contacts.sort((a, b) => {
+    private sortContacts(contacts: ContactItem[]): void {
+        contacts.sort((a, b) => {
             if (a.name.toLowerCase() > b.name.toLowerCase()) {
                 return 1;
             }

@@ -8,7 +8,6 @@ import { AddContactFormComponent } from './components/add-contact-form/add-conta
 import { ContactDetailsComponent } from './components/contact-details.component/contact-details.component';
 import { ContactsListComponent } from './components/contacts-list/contacts-list.component';
 import { CreateContactComponent } from './components/create-contact/create-contact.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -24,10 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

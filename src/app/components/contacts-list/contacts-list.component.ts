@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { switchMap } from "rxjs/operators";
 import { ContactItem } from "src/app/models/contac-item";
 import { ContactsService } from "src/app/services/contacts.service";
 
@@ -17,16 +18,14 @@ export class ContactsListComponent implements OnInit {
     constructor(private contactsService: ContactsService) { }
 
     public ngOnInit(): void {
-        this.contactsService.getContacts().then((data: ContactItem[]) => {
+        this.contactsService.getContacts().subscribe((data: ContactItem[]) => {
             this.contactList = data;
-            this.contactsService.sortContacts();
         });
 
-        this.contactsService.getContactsListUpdated().subscribe(() => {
-            this.contactsService.getContacts().then((data: ContactItem[]) => {
-                this.contactList = data;
-                this.contactsService.sortContacts();
-            });
+        this.contactsService.getContactsListUpdated().pipe(switchMap(() => {
+            return this.contactsService.getContacts();
+        })).subscribe((data: ContactItem[]) => {
+            this.contactList = data;
         });
     }
 

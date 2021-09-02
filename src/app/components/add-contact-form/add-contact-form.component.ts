@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ContactItem } from "src/app/models/contac-item";
 import { ContactsService } from "src/app/services/contacts.service";
@@ -10,25 +10,25 @@ import { ContactFormComponent } from "src/app/components/contact-form/contact-fo
     styleUrls: ['./add-contact-form.component.scss']
 })
 
-export class AddContactFormComponent extends ContactFormComponent implements OnInit {
+export class AddContactFormComponent extends ContactFormComponent implements OnInit, OnChanges {
 
     @Input() public visible: boolean;
     @Output() public formClosed: EventEmitter<void> = new EventEmitter<void>();
 
-    @ViewChildren('i') inputs: QueryList<ElementRef>;
+    @ViewChildren('input') inputs: QueryList<ElementRef>;
 
     constructor(private contactsService: ContactsService) {
         super();
+    }
+
+    public ngOnInit(): void {
+        this.createFormGroup();
     }
 
     public ngOnChanges(): void {
         if (this.visible) {
             this.inputs.first.nativeElement.focus();
         }
-    }
-
-    public ngOnInit(): void {
-        this.createFormGroup();
     }
 
     public createContact(): void {
@@ -40,16 +40,12 @@ export class AddContactFormComponent extends ContactFormComponent implements OnI
 
         const [name, surname, phone, email] = map.values();
 
-        this.contactsService.addContact(new ContactItem(name, surname, phone, email));
-
-        this.closeAddContactForm();
+        this.contactsService.addContact(new ContactItem(name, surname, phone, email)).subscribe(() => {
+            this.closeAddContactForm();
+        });
     }
 
-    public cancelContactCreation(): void {
-        this.closeAddContactForm();
-    }
-
-    private closeAddContactForm(): void {
+    public closeAddContactForm(): void {
         this.formClosed.emit();
 
         this.createFormGroup();

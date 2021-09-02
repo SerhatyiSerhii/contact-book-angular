@@ -10,30 +10,20 @@ import { ContactItem } from "../models/contac-item";
 export class ApiService {
     constructor(private http: HttpClient) {}
 
-    public getContacts(): Promise<ContactItem[]> {
-        return this.http.get<ContactItem[]>('http://localhost:8080/contact').toPromise();
+    public getContacts(): Observable<ContactItem[]> {
+        return this.http.get<ContactItem[]>('http://localhost:8080/contact');
     }
 
-    public getContactById(id: number) {
-        return this.http.get<ContactItem>(`http://localhost:8080/contact/${id}`).toPromise();
+    public getContactById(id: number): Observable<ContactItem> {
+        return this.http.get<ContactItem>(`http://localhost:8080/contact/${id}`);
     }
 
     public addContact(contact: ContactItem): Observable<ContactItem> {
-
-        const newContact = {
-            "contact": contact
-        }
-
-        return this.http.post<ContactItem>('http://localhost:8080/contact', newContact);
+        return this.http.post<ContactItem>('http://localhost:8080/contact', {contact: contact});
     }
 
     public updateContact(id: number, contact: ContactItem): Observable<ContactItem> {
-
-        const updatedContact = {
-            "contact": contact
-        }
-
-        return this.http.put<ContactItem>(`http://localhost:8080/contact/${id}`, updatedContact);
+        return this.http.put<ContactItem>(`http://localhost:8080/contact/${id}`, {contact: contact});
     }
 
     public deleteContact(id: number): Observable<ContactItem> {

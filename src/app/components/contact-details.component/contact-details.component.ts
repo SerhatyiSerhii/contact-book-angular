@@ -40,7 +40,7 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public getContact(): void {
-        this.contactsService.getContactById(this.selectedContactId).then((item: ContactItem) => {
+        this.contactsService.getContactById(this.selectedContactId).subscribe((item: ContactItem) => {
             this.contact = item;
         })
     }
@@ -58,9 +58,9 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public deleteContact(): void {
-        this.contactsService.deleteContact(this.selectedContactId);
-
-        this.reset();
+        this.contactsService.deleteContact(this.selectedContactId).subscribe(() => {
+            this.reset();
+        });
     }
 
     public toggleFavorite(): void {
@@ -86,11 +86,9 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
             this.updateForm.controls.email.value,
         );
 
-        this.contactsService.updateContact(this.selectedContactId, updatedContact);
-
-        this.contactsService.getContactById(this.selectedContactId);
-
-        this.getContact();
+        this.contactsService.updateContact(this.selectedContactId, updatedContact).subscribe(() => {
+            this.getContact();
+        });
 
         this.contactEdit = false;
     }

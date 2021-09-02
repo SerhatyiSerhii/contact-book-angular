@@ -2,13 +2,13 @@
     <form [formGroup]="updateForm" (submit)="createContact()">
         <span>New Contact</span>
 
-        <label *ngFor="let item of contactFields; let i = index">
+        <label *ngFor="let item of contactFields">
             <input type="text" [placeholder]="item.title" [formControlName]="item.name"
-                [class.alert]="isAbstractControlInvalid(item.name)" #i>
+                [class.alert]="isAbstractControlInvalid(item.name)" #input>
         </label>
 
         <div class="buttons">
-            <button type="button" (click)="cancelContactCreation()">Cancel</button>
+            <button type="button" (click)="closeAddContactForm()">Cancel</button>
             <button type="submit" [disabled]="updateForm.invalid || isFormInvalid()" [title]="showBtnTitle()">
                 Create contact
             </button>
