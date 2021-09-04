@@ -64,7 +64,11 @@ export class ContactDetailsComponent extends ContactFormComponent implements OnC
     }
 
     public toggleFavorite(): void {
-        this.contact.favorite = !this.contact.favorite
+        this.contact.favorite = !this.contact.favorite;
+
+        this.contactsService.updateContact(this.selectedContactId, this.contact).subscribe(() => {
+            this.getContact();
+        });
     }
 
     public editContact(): void {

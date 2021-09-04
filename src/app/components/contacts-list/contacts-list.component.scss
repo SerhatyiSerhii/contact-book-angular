@@ -28,7 +28,6 @@ ul {
             font-weight: bolder;
 
             &.favorite::after {
-                // content: '\2B50';
                 content: '\2605';
                 color: #76b852;
                 display: block;
