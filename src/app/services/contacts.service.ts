@@ -18,40 +18,54 @@ export class ContactsService {
     }
 
     public getContacts(): Observable<ContactItem[]> {
-        return this.api.getContacts().pipe(tap((contacts: ContactItem[]) => {
+        return this.apiStub.getContacts().pipe(tap((contacts: ContactItem[]) => {
             this.sortContacts(contacts);
         }));
+
+        // API server commented
+        // return this.api.getContacts().pipe(tap((contacts: ContactItem[]) => {
+        //     this.sortContacts(contacts);
+        // }));
     }
 
     public getContactById(id: number): Observable<ContactItem> {
-        return this.api.getContactById(id);
+        return this.apiStub.getContactById(id);
+
+        // API server commented
+        // return this.api.getContactById(id);
     }
 
     public addContact(contact: ContactItem): Observable<ContactItem> {
-        return this.api.addContact(contact).pipe(tap((item: ContactItem) => {
-
-            this.apiStub.addContact(item);
-
+        return this.apiStub.addContact(contact).pipe((tap(() => {
             this.contactsListUpdated$.next();
-        }));
+        })));
+
+        // API server commented
+        // return this.api.addContact(contact).pipe(tap(() => {
+        //     this.contactsListUpdated$.next();
+        // }));
     }
 
     public deleteContact(id: number): Observable<ContactItem> {
-        return this.api.deleteContact(id).pipe(tap(() => {
-
-            this.apiStub.deleteContact(id);
-
+        return this.apiStub.deleteContact(id).pipe(tap(() => {
             this.contactsListUpdated$.next();
         }));
+
+        // API server commented
+        // return this.api.deleteContact(id).pipe(tap(() => {
+        //     this.contactsListUpdated$.next();
+        // }));
     }
 
     public updateContact(id: number, updatedContact: ContactItem): Observable<ContactItem> {
-        return this.api.updateContact(id, updatedContact).pipe(tap(() => {
-
-            this.apiStub.updateContact(id, updatedContact);
-
+        return this.apiStub.updateContact(id, updatedContact).pipe(tap(() => {
             this.contactsListUpdated$.next();
         }));
+
+        // API server commented
+        // return this.api.updateContact(id, updatedContact).pipe(tap(() => {
+        //     this.contactsListUpdated$.next();
+        // }));
     }
 
     private sortContacts(contacts: ContactItem[]): void {
