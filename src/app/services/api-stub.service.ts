@@ -1,94 +1,83 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { ApiInterface } from "../models/api-interface";
 import { ContactItem } from "../models/contac-item";
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class ApiStubService {
+export class ApiStubService implements ApiInterface {
+    private storageKey: string = 'contacts';
+
     public getContacts(): Observable<ContactItem[]> {
-        return new Observable<ContactItem[]>((subcriber) => {
-            if ('contacts' in localStorage) {
-                const keys: string[] = Object.keys(localStorage);
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
 
-                const values: ContactItem[] = JSON.parse(localStorage.getItem(keys[0]));
-
-                subcriber.next(values);
-            }
-        });
+        if (!values) {
+            return of([]);
+        } else {
+            return of(values);
+        }
     }
 
     public getContactById(id: number): Observable<ContactItem> {
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
 
-        return new Observable<ContactItem>((subscriber) => {
-            const keys: string[] = Object.keys(localStorage);
-
-            const values: ContactItem[] = JSON.parse(localStorage.getItem(keys[0]));
-
-            const item = values.find((item) => {
-                return item.id === id;
-            });
-
-            subscriber.next(item);
+        const item = values.find((item) => {
+            return item.id === id;
         });
+
+        return of(item);
     }
 
     public addContact(contact: ContactItem): Observable<ContactItem> {
-        return new Observable<ContactItem>((subscriber) => {
-            if ('contacts' in localStorage) {
-                const contactsArray = JSON.parse(localStorage.getItem('contacts'));
+        if (this.storageKey in localStorage) {
+            const contactsArray = JSON.parse(localStorage.getItem(this.storageKey));
 
-                contactsArray.push(contact);
+            contactsArray.push(contact);
 
-                localStorage.setItem('contacts', JSON.stringify(contactsArray));
-            } else {
-                localStorage.setItem('contacts', JSON.stringify([contact]));
-            }
+            localStorage.setItem(this.storageKey, JSON.stringify(contactsArray));
+        } else {
+            localStorage.setItem(this.storageKey, JSON.stringify([contact]));
+        }
 
-            subscriber.next();
-        });
+        return of(contact);
     }
 
     public updateContact(id: number, contact: ContactItem): Observable<ContactItem> {
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
 
-        return new Observable<ContactItem>((subscriber) => {
-            const keys: string[] = Object.keys(localStorage);
-
-            const values: ContactItem[] = JSON.parse(localStorage.getItem(keys[0]));
-
-            const item = values.find((item) => {
-                return item.id === id;
-            });
-
-            item.name = contact.name;
-            item.surname = contact.surname;
-            item.phone = contact.phone;
-            item.email = contact.email;
-            item.favorite = contact.favorite;
-
-            localStorage.setItem('contacts', JSON.stringify(values));
-
-            subscriber.next(item);
+        const item = values.find((item) => {
+            return item.id === id;
         });
+
+        item.name = contact.name;
+        item.surname = contact.surname;
+        item.phone = contact.phone;
+        item.email = contact.email;
+        item.favorite = contact.favorite;
+
+        localStorage.setItem(this.storageKey, JSON.stringify(values));
+
+        return of(item);
     }
 
     public deleteContact(id: number): Observable<ContactItem> {
-        return new Observable<ContactItem>((subscriber) => {
-            const keys: string[] = Object.keys(localStorage);
-
-            const values: ContactItem[] = JSON.parse(localStorage.getItem(keys[0])).filter((item: ContactItem) => {
-                return item.id !== id;
-            });
-
-            localStorage.setItem('contacts', JSON.stringify(values));
-
-            subscriber.next();
-
-            if (!values.length) {
-                localStorage.clear();
-                subscriber.next();
-            }
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey)).filter((item: ContactItem) => {
+            return item.id !== id;
         });
+
+        const deltedItem: ContactItem = JSON.parse(localStorage.getItem(this.storageKey)).find((item: ContactItem) => {
+            return item.id === id;
+        });
+
+        localStorage.setItem(this.storageKey, JSON.stringify(values));
+
+        if (!values.length) {
+            localStorage.clear();
+            return of(deltedItem);
+        }
+
+        return of(deltedItem);
     }
 }
