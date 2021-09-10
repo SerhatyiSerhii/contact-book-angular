@@ -25,7 +25,7 @@ app.post('/contact', (req, res) => {
     const contact = req.body.contact;
 
     if (!isContactValid(contact)) {
-        res.status(400).send({ errorMessage: 'Some required field missed!' });
+        res.status(400).json({ errorMessage: 'Some required field missed!' });
         return;
     }
 
@@ -40,14 +40,14 @@ app.put('/contact/:id', (req, res) => {
     const contactIndex = contactsDataBase.findIndex(c => c.id === contactId);
 
     if (contactIndex === -1) {
-        res.status(400).send({ errorMessage: 'Contact does not exist!' });
+        res.status(400).json({ errorMessage: 'Contact does not exist!' });
         return;
     }
 
     const contact = req.body.contact;
 
     if (!isContactValid(contact)) {
-        res.status(400).send({ errorMessage: 'Some required field missed!' });
+        res.status(400).json({ errorMessage: 'Some required field missed!' });
         return;
     }
 
@@ -62,13 +62,13 @@ app.delete('/contact/:id', (req, res) => {
     const contactId = Number(req.params.id);
 
     if (!contactsDataBase.some(c => c.id === contactId)) {
-        res.status(400).send({ errorMessage: 'Contact does not exist!' });
+        res.status(400).json({ errorMessage: 'Contact does not exist!' });
         return;
     }
 
     contactsDataBase = contactsDataBase.filter(c => c.id !== contactId);
 
-    res.send({});
+    res.json({});
 });
 
 const isContactValid = (contact) => Boolean(contact)
