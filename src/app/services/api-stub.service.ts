@@ -1,45 +1,35 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { ApiInterface } from "../models/api-interface";
+import { IApiService } from "../models/api-interface";
 import { ContactItem } from "../models/contac-item";
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class ApiStubService implements ApiInterface {
+export class ApiStubService implements IApiService {
     private storageKey: string = 'contacts';
 
     public getContacts(): Observable<ContactItem[]> {
-        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey)) ?? [];
 
-        if (!values) {
-            return of([]);
-        } else {
-            return of(values);
-        }
+        return of(values);
     }
 
     public getContactById(id: number): Observable<ContactItem> {
         const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
 
-        const item = values.find((item) => {
-            return item.id === id;
-        });
+        const item = values.find(item => item.id === id);
 
         return of(item);
     }
 
     public addContact(contact: ContactItem): Observable<ContactItem> {
-        if (this.storageKey in localStorage) {
-            const contactsArray = JSON.parse(localStorage.getItem(this.storageKey));
+        const contactsArray: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey)) ?? [];
 
-            contactsArray.push(contact);
+        contactsArray.push(contact);
 
-            localStorage.setItem(this.storageKey, JSON.stringify(contactsArray));
-        } else {
-            localStorage.setItem(this.storageKey, JSON.stringify([contact]));
-        }
+        localStorage.setItem(this.storageKey, JSON.stringify(contactsArray));
 
         return of(contact);
     }
@@ -47,9 +37,7 @@ export class ApiStubService implements ApiInterface {
     public updateContact(id: number, contact: ContactItem): Observable<ContactItem> {
         const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey));
 
-        const item = values.find((item) => {
-            return item.id === id;
-        });
+        const item = values.find(item => item.id === id);
 
         item.name = contact.name;
         item.surname = contact.surname;
@@ -62,22 +50,12 @@ export class ApiStubService implements ApiInterface {
         return of(item);
     }
 
-    public deleteContact(id: number): Observable<ContactItem> {
-        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey)).filter((item: ContactItem) => {
-            return item.id !== id;
-        });
-
-        const deltedItem: ContactItem = JSON.parse(localStorage.getItem(this.storageKey)).find((item: ContactItem) => {
-            return item.id === id;
-        });
+    public deleteContact(id: number): Observable<void> {
+        const values: ContactItem[] = JSON.parse(localStorage.getItem(this.storageKey))
+            .filter((item: ContactItem) => item.id !== id);
 
         localStorage.setItem(this.storageKey, JSON.stringify(values));
 
-        if (!values.length) {
-            localStorage.clear();
-            return of(deltedItem);
-        }
-
-        return of(deltedItem);
+        return of(null);
     }
 }

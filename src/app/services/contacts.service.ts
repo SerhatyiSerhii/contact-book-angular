@@ -32,7 +32,7 @@ export class ContactsService {
         }));
     }
 
-    public deleteContact(id: number): Observable<ContactItem> {
+    public deleteContact(id: number): Observable<void> {
         return this.api.deleteContact(id).pipe(tap(() => {
             this.contactsListUpdated$.next();
         }));
